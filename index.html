@@ -25,53 +25,13 @@
 
 <main id="topo">
   <section class="hero">
-    <div class="scene" aria-hidden="true">
-      <svg class="lifter" viewBox="0 0 300 300" focusable="false">
-        <defs>
-          <linearGradient id="steel" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="300" y2="300"><stop offset="0" stop-color="#aab3c0"/><stop offset=".55" stop-color="#4b5463"/><stop offset="1" stop-color="#1c222b"/></linearGradient>
-          <linearGradient id="plate" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="300" y2="0"><stop offset="0" stop-color="#eef1f6"/><stop offset=".5" stop-color="#7d8796"/><stop offset="1" stop-color="#eef1f6"/></linearGradient>
-          <g id="bar" stroke="#e6e9ee" stroke-opacity=".4" fill="url(#plate)">
-            <line x1="4" y1="38" x2="296" y2="38" stroke="#c9d0da" stroke-opacity="1" stroke-width="5"/>
-            <rect x="14" y="3" width="20" height="70" rx="3"/><rect x="36" y="10" width="16" height="56" rx="3"/><rect x="54" y="17" width="10" height="42" rx="2"/>
-            <rect x="266" y="3" width="20" height="70" rx="3"/><rect x="248" y="10" width="16" height="56" rx="3"/><rect x="236" y="17" width="10" height="42" rx="2"/>
-          </g>
-        </defs>
-
-        <g class="man">
-          <g fill="url(#steel)"><circle cx="150" cy="72" r="15"/><path d="M98 98Q150 86 202 98L172 180H128Z"/></g>
-          <g fill="none" stroke="url(#steel)" stroke-linecap="round" stroke-linejoin="round">
-            <polyline stroke-width="24" points="136,180 124,240 116,292"/>
-            <polyline stroke-width="24" points="164,180 176,240 184,292"/>
-            <polyline stroke-width="17" points="100,100 82,112 106,92"><animate attributeName="points" dur="4s" repeatCount="indefinite" keyTimes="0;.35;.55;.9;1" values="100,100 82,112 106,92;100,100 102,70 106,38;100,100 102,70 106,38;100,100 82,112 106,92;100,100 82,112 106,92"/></polyline>
-            <polyline stroke-width="17" points="200,100 218,112 194,92"><animate attributeName="points" dur="4s" repeatCount="indefinite" keyTimes="0;.35;.55;.9;1" values="200,100 218,112 194,92;200,100 198,70 194,38;200,100 198,70 194,38;200,100 218,112 194,92;200,100 218,112 194,92"/></polyline>
-          </g>
-          <g><animateTransform attributeName="transform" type="translate" dur="4s" repeatCount="indefinite" keyTimes="0;.35;.55;.9;1" values="0 54;0 0;0 0;0 54;0 54"/><use href="#bar"/></g>
-        </g>
-
-        <g class="woman">
-          <g fill="url(#steel)"><circle cx="150" cy="72" r="14"/><path d="M160 64Q198 56 188 102Q180 78 160 76Z"/><path d="M112 98Q150 88 188 98L170 158L180 188H120L130 158Z"/></g>
-          <g fill="none" stroke="url(#steel)" stroke-linecap="round" stroke-linejoin="round">
-            <polyline stroke-width="21" points="134,188 126,240 120,292"/>
-            <polyline stroke-width="21" points="166,188 174,240 180,292"/>
-            <polyline stroke-width="12" points="114,100 94,112 106,92"><animate attributeName="points" dur="4s" repeatCount="indefinite" keyTimes="0;.35;.55;.9;1" values="114,100 94,112 106,92;114,100 108,70 106,38;114,100 108,70 106,38;114,100 94,112 106,92;114,100 94,112 106,92"/></polyline>
-            <polyline stroke-width="12" points="186,100 206,112 194,92"><animate attributeName="points" dur="4s" repeatCount="indefinite" keyTimes="0;.35;.55;.9;1" values="186,100 206,112 194,92;186,100 192,70 194,38;186,100 192,70 194,38;186,100 206,112 194,92;186,100 206,112 194,92"/></polyline>
-          </g>
-          <g><animateTransform attributeName="transform" type="translate" dur="4s" repeatCount="indefinite" keyTimes="0;.35;.55;.9;1" values="0 54;0 0;0 0;0 54;0 54"/><use href="#bar"/></g>
-        </g>
-      </svg>
-
-      <div class="moon"></div>
-
-      <svg class="wolf" viewBox="0 0 220 260" focusable="false">
-        <defs><linearGradient id="wolfg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbfcfe"/><stop offset=".5" stop-color="#9aa4b3"/><stop offset="1" stop-color="#2b323d"/></linearGradient></defs>
-        <g class="rings" fill="none" stroke="#e6e9ee" stroke-width="1.5"><circle cx="172" cy="30" r="14" vector-effect="non-scaling-stroke"/><circle cx="172" cy="30" r="14" vector-effect="non-scaling-stroke"/><circle cx="172" cy="30" r="14" vector-effect="non-scaling-stroke"/></g>
-        <g class="body">
-          <path d="M10 260L32 205C40 172 62 150 80 132L76 98L84 58L102 90L120 78L166 30L174 34L172 40L143 67L172 55L170 62L133 100L142 112L134 120L148 130L140 142L156 152L150 166L162 176L176 222L178 260Z" fill="url(#wolfg)" stroke="#fff" stroke-opacity=".5" stroke-width="1.2" stroke-linejoin="round"/>
-          <circle cx="114" cy="86" r="2.6" fill="#d4a843"/>
-        </g>
-      </svg>
+    <!-- Cena Cinematográfica: Lua com Crateras + Metamorfose Lobo -> Homem Prateado -> Lobo -> Mulher Prateada -->
+    <div class="moon-stage" aria-hidden="true">
+      <canvas id="wolfMoonCanvas"></canvas>
     </div>
+
     <div class="hero-in">
+      <div class="hero-badge"><span class="pulse-dot"></span> Método Exclusivo · Rio de Janeiro</div>
       <h1 aria-label="Team Lobo">
         <span class="mask"><span class="chrome">TEAM</span></span>
         <span class="mask"><span class="chrome">LOBO</span></span>
