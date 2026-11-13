@@ -28,14 +28,14 @@ section{padding:clamp(4rem,10vw,8rem) var(--pad)}
 .nav nav a:hover{color:var(--chrome)}
 
 /* botões */
-.btn{display:inline-block;padding:1rem 1.8rem;background:linear-gradient(135deg,#f4f6f9,#a9b2bf);color:var(--ink);font-weight:600;text-decoration:none;border-radius:999px;transition:transform .25s,box-shadow .25s;will-change:transform}
-.btn:hover{box-shadow:0 10px 40px rgba(230,233,238,.28)}
+.btn{display:inline-block;padding:1.1rem 2rem;background:linear-gradient(135deg,#ffffff,#b8c2d1);color:var(--ink);font-weight:600;text-decoration:none;border-radius:999px;transition:transform .25s,box-shadow .25s;will-change:transform}
+.btn:hover{box-shadow:0 12px 45px rgba(230,233,238,.35)}
 .btn-sm{padding:.6rem 1.2rem;font-size:.95rem}
 .btn-line{background:none;color:var(--chrome);border:1px solid var(--steel)}
 .btn-line:hover{background:var(--chrome);color:var(--ink)}
 .link{margin-left:1.5rem;color:var(--steel);text-underline-offset:6px}
 
-/* hero & cena da lua / lobo / atletas */
+/* hero & cena da lua / imagens sincronizadas */
 .hero{
   position:relative;
   min-height:100svh;
@@ -43,20 +43,20 @@ section{padding:clamp(4rem,10vw,8rem) var(--pad)}
   align-items:end;
   padding-top:7rem;
   overflow:hidden;
-  background:radial-gradient(110% 85% at 75% 18%,#141d2b 0%,#080c13 52%,var(--ink) 100%);
+  background:radial-gradient(110% 85% at 75% 18%,#162235 0%,#080c14 52%,var(--ink) 100%);
 }
 
-/* Palco da animação cinematográfica atrás e no canto direito do TEAM LOBO */
+/* Palco da lua e imagens no canto direito */
 .moon-stage{
   position:absolute;
-  right:-4vw;
-  top:4vh;
-  width:min(88vmin,860px);
-  height:min(88vmin,860px);
+  right:-3vw;
+  top:2vh;
+  width:min(90vmin,880px);
+  height:min(90vmin,880px);
   pointer-events:none;
   z-index:1;
   opacity:0;
-  transform:translate(calc(var(--mx,0)*-26px),calc(60px + var(--my,0)*-26px));
+  transform:translate(calc(var(--mx,0)*-26px),calc(50px + var(--my,0)*-26px));
   animation:stageRise 2s .15s cubic-bezier(.2,.7,.2,1) forwards;
 }
 .moon-stage canvas{
@@ -71,6 +71,29 @@ section{padding:clamp(4rem,10vw,8rem) var(--pad)}
   }
 }
 
+/* Imagens em PNG/JPG sobrepostas perfeitamente sincronizadas com a fase da lua */
+.hero-characters{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.char-img{
+  position:absolute;
+  max-width:54%;
+  max-height:54%;
+  object-fit:contain;
+  opacity:0;
+  transform:scale(0.92) translateY(12px);
+  transition:opacity 1.2s cubic-bezier(.4,0,.2,1), transform 1.2s cubic-bezier(.4,0,.2,1);
+  filter:drop-shadow(0 0 35px rgba(225,238,255,0.45)) contrast(1.1);
+}
+.char-img.active{
+  opacity:1;
+  transform:scale(1) translateY(0);
+}
+
 .hero-in{position:relative;z-index:2;max-width:960px}
 .hero-badge{
   display:inline-flex;
@@ -79,8 +102,8 @@ section{padding:clamp(4rem,10vw,8rem) var(--pad)}
   padding:.35rem .9rem;
   margin-bottom:1.1rem;
   border-radius:999px;
-  border:1px solid rgba(230,233,238,.18);
-  background:rgba(12,17,24,.65);
+  border:1px solid rgba(230,233,238,.22);
+  background:rgba(12,17,24,.7);
   backdrop-filter:blur(8px);
   font-size:.82rem;
   letter-spacing:.08em;
@@ -92,7 +115,7 @@ section{padding:clamp(4rem,10vw,8rem) var(--pad)}
 .pulse-dot{
   width:7px;height:7px;border-radius:50%;
   background:var(--gold);
-  box-shadow:0 0 10px var(--gold);
+  box-shadow:0 0 12px var(--gold);
   animation:pulse 2.2s infinite;
 }
 @keyframes pulse{
@@ -105,12 +128,12 @@ h1{
   font-weight:900;
   line-height:.82;
   margin-bottom:1.75rem;
-  text-shadow:0 16px 48px rgba(5,7,11,.85);
+  text-shadow:0 18px 50px rgba(5,7,11,.9);
 }
 .mask{display:block;overflow:hidden;padding-bottom:.04em}
 .chrome{
   display:block;
-  background:linear-gradient(100deg,#7c8696 0%,#ffffff 32%,#9ba5b5 50%,#ffffff 68%,#7c8696 100%);
+  background:linear-gradient(100deg,#8b97a8 0%,#ffffff 30%,#a8b3c2 50%,#ffffff 70%,#8b97a8 100%);
   background-size:250% 100%;
   -webkit-background-clip:text;
   background-clip:text;
@@ -123,7 +146,7 @@ h1{
 @keyframes shine{to{background-position:-250% 0}}
 .lead{
   font-size:clamp(1.08rem,1.9vw,1.4rem);
-  color:#e1e6ef;
+  color:#e8edf5;
   margin-bottom:2rem;
   text-shadow:0 4px 20px rgba(5,7,11,.95);
   opacity:0;
@@ -190,14 +213,14 @@ footer a{text-underline-offset:4px}
   .sid{grid-template-columns:1fr}
   .sid figure{position:static;max-height:70vh}
   .moon-stage{
-    top:6vh;
-    right:-16vw;
-    width:min(108vw,560px);
-    height:min(108vw,560px);
-    opacity:.88;
+    top:5vh;
+    right:-15vw;
+    width:min(105vw,540px);
+    height:min(105vw,540px);
+    opacity:.9;
   }
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
-  .moon-stage,.chrome,.lead,.cta-row,.hero-badge{opacity:1;transform:none}
+  .moon-stage,.chrome,.lead,.cta-row,.hero-badge,.char-img{opacity:1;transform:none}
 }

@@ -53,18 +53,16 @@ if (!reduce) {
 }
 
 /* ============================================================================
-   ANIMAÇÃO AVANÇADA TEAM LOBO:
+   ANIMAÇÃO AVANÇADA TEAM LOBO (LUA PRATEADA & SUPER BRILHANTE + IMAGENS SINCRONIZADAS):
    Ciclo contínuo de 18 segundos:
-   1. Lua Cheia Realista + Lobo Uivando (com ondas sonoras sutis e brilho lunar)
-   2. Transição lenta para Lua Minguante + Metamorfose (partículas prateadas)
-      para Atleta Homem Forte segurando Barra com Anilhas (todo prateado cromado)
-   3. Retorno da Lua Minguante para Lua Cheia + Lobo Uivando novamente
-   4. Nova transição para Lua Minguante + Atleta Mulher Forte segurando Barra
-      com Anilhas (toda prateada cromada)
-   5. Retorno suave para Lua Cheia + Lobo Uivando
+   1. Lua Cheia Super Prateada e Brilhante + Lobo.png ativo
+   2. Transição para Lua Minguante + Partículas prateadas + Homem.jpg ativo
+   3. Retorno para Lua Cheia + Lobo.png ativo
+   4. Transição para Lua Minguante + Partículas prateadas + Mulher.jpg ativo
+   5. Retorno para Lua Cheia + Lobo.png ativo
    ============================================================================ */
 (() => {
-  const canvas = document.getElementById("wolfMoonCanvas");
+  const canvas = document.getElementById("silverMoonCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
@@ -72,13 +70,18 @@ if (!reduce) {
   canvas.width = SIZE;
   canvas.height = SIZE;
 
-  // Textura procedural offscreen da lua realista com mares lunares e crateras
+  // Referências para os elementos de imagem sincronizados
+  const charWolf = document.getElementById("charWolf");
+  const charMan = document.getElementById("charMan");
+  const charWoman = document.getElementById("charWoman");
+
+  // Textura offscreen da lua ultra prateada e detalhada com crateras profundas
   const moonTex = document.createElement("canvas");
   moonTex.width = 560;
   moonTex.height = 560;
   const mctx = moonTex.getContext("2d");
 
-  function buildMoonTexture() {
+  function buildSuperSilverMoonTexture() {
     const w = moonTex.width, h = moonTex.height, cx = w / 2, cy = h / 2, r = w * 0.46;
     mctx.clearRect(0, 0, w, h);
     mctx.save();
@@ -86,118 +89,92 @@ if (!reduce) {
     mctx.arc(cx, cy, r, 0, Math.PI * 2);
     mctx.clip();
 
-    // Base prateada lunar
-    const baseGrad = mctx.createRadialGradient(cx - r * 0.25, cy - r * 0.25, r * 0.1, cx, cy, r);
-    baseGrad.addColorStop(0, "#f5f7fa");
-    baseGrad.addColorStop(0.55, "#cfd6e0");
-    baseGrad.addColorStop(0.88, "#8e98a8");
-    baseGrad.addColorStop(1, "#535c6b");
+    // Base ultra prateada e luminosa
+    const baseGrad = mctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.05, cx, cy, r);
+    baseGrad.addColorStop(0, "#ffffff");
+    baseGrad.addColorStop(0.35, "#e6edf8");
+    baseGrad.addColorStop(0.72, "#b4c3dc");
+    baseGrad.addColorStop(0.92, "#7a8a9f");
+    baseGrad.addColorStop(1, "#3f4958");
     mctx.fillStyle = baseGrad;
     mctx.fillRect(0, 0, w, h);
 
-    // Mares lunares (manchas escuras características da lua)
+    // Mares lunares em tons prateados profundos
     const maria = [
-      [-0.25, -0.22, 0.26, 0.20, 0.22],
-      [-0.02, -0.30, 0.18, 0.14, 0.19],
-      [0.20, -0.15, 0.22, 0.25, 0.20],
-      [-0.32, 0.08, 0.20, 0.24, 0.18],
-      [0.05, 0.05, 0.16, 0.15, 0.15],
-      [0.26, 0.18, 0.15, 0.13, 0.16],
-      [-0.12, 0.28, 0.19, 0.14, 0.14],
+      [-0.25, -0.22, 0.26, 0.20, 0.28],
+      [-0.02, -0.30, 0.18, 0.14, 0.24],
+      [0.20, -0.15, 0.22, 0.25, 0.25],
+      [-0.32, 0.08, 0.20, 0.24, 0.22],
+      [0.05, 0.05, 0.16, 0.15, 0.20],
+      [0.26, 0.18, 0.15, 0.13, 0.22],
+      [-0.12, 0.28, 0.19, 0.14, 0.20],
     ];
     maria.forEach(([ox, oy, rx, ry, alpha]) => {
       const g = mctx.createRadialGradient(cx + ox * r, cy + oy * r, 2, cx + ox * r, cy + oy * r, Math.max(rx, ry) * r);
-      g.addColorStop(0, `rgba(48, 55, 68, ${alpha})`);
-      g.addColorStop(0.7, `rgba(62, 70, 84, ${alpha * 0.65})`);
-      g.addColorStop(1, "rgba(62, 70, 84, 0)");
+      g.addColorStop(0, `rgba(50, 60, 75, ${alpha})`);
+      g.addColorStop(0.7, `rgba(75, 88, 108, ${alpha * 0.7})`);
+      g.addColorStop(1, "rgba(75, 88, 108, 0)");
       mctx.fillStyle = g;
       mctx.beginPath();
       mctx.ellipse(cx + ox * r, cy + oy * r, rx * r, ry * r, 0.3, 0, Math.PI * 2);
       mctx.fill();
     });
 
-    // Crateras detalhadas com borda iluminada e sombra interna
-    let seed = 42;
+    // Crateras lunares detalhadas com brilho acentuado
+    let seed = 123;
     const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-    for (let i = 0; i < 95; i++) {
+    for (let i = 0; i < 110; i++) {
       const ang = rand() * Math.PI * 2;
-      const dist = Math.sqrt(rand()) * r * 0.92;
+      const dist = Math.sqrt(rand()) * r * 0.93;
       const x = cx + Math.cos(ang) * dist;
       const y = cy + Math.sin(ang) * dist;
-      const cr = (0.015 + Math.pow(rand(), 2.4) * 0.075) * r;
+      const cr = (0.012 + Math.pow(rand(), 2.4) * 0.07) * r;
 
       mctx.beginPath();
       mctx.arc(x, y, cr, 0, Math.PI * 2);
-      mctx.fillStyle = "rgba(40, 46, 58, 0.22)";
+      mctx.fillStyle = "rgba(45, 54, 68, 0.28)";
       mctx.fill();
 
       mctx.beginPath();
       mctx.arc(x - cr * 0.18, y - cr * 0.18, cr * 0.88, 0, Math.PI * 2);
-      mctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
-      mctx.lineWidth = Math.max(1, cr * 0.14);
+      mctx.strokeStyle = "rgba(255, 255, 255, 0.42)";
+      mctx.lineWidth = Math.max(1, cr * 0.16);
       mctx.stroke();
     }
 
-    // Cratera Tycho com raios brilhantes no polo sul lunar
-    const tx = cx - r * 0.12, ty = cy + r * 0.56;
-    for (let j = 0; j < 14; j++) {
-      const a = (j / 14) * Math.PI * 2;
-      mctx.beginPath();
-      mctx.moveTo(tx, ty);
-      mctx.lineTo(tx + Math.cos(a) * r * 0.42, ty + Math.sin(a) * r * 0.42);
-      mctx.strokeStyle = "rgba(255, 255, 255, 0.11)";
-      mctx.lineWidth = 1.5;
-      mctx.stroke();
-    }
-    mctx.beginPath();
-    mctx.arc(tx, ty, r * 0.055, 0, Math.PI * 2);
-    mctx.fillStyle = "rgba(240, 244, 250, 0.45)";
-    mctx.fill();
-
-    // Vinheta esférica 3D na borda da lua
-    const rim = mctx.createRadialGradient(cx, cy, r * 0.72, cx, cy, r);
+    // Vinheta 3D e brilho na borda
+    const rim = mctx.createRadialGradient(cx, cy, r * 0.65, cx, cy, r);
     rim.addColorStop(0, "rgba(5,7,11,0)");
-    rim.addColorStop(1, "rgba(5,7,11,0.55)");
+    rim.addColorStop(1, "rgba(5,7,11,0.6)");
     mctx.fillStyle = rim;
     mctx.fillRect(0, 0, w, h);
 
     mctx.restore();
   }
-  buildMoonTexture();
+  buildSuperSilverMoonTexture();
 
-  // Partículas metálicas prateadas que flutuam durante a metamorfose
-  const particles = Array.from({ length: 54 }, (_, i) => ({
-    angle: (i / 54) * Math.PI * 2,
-    radius: 60 + (i * 37) % 240,
-    size: 1.4 + (i % 3) * 0.9,
-    speed: 0.4 + (i % 5) * 0.18,
-    offset: i * 0.7
+  // Partículas prateadas cintilantes para as transições
+  const particles = Array.from({ length: 64 }, (_, i) => ({
+    angle: (i / 64) * Math.PI * 2,
+    radius: 70 + (i * 41) % 260,
+    size: 1.5 + (i % 3) * 1.0,
+    speed: 0.45 + (i % 5) * 0.18,
+    offset: i * 0.6
   }));
 
-  // Gradiente metálico prateado cromado 3D para o homem e a mulher fortes
-  function createChromeGradient(x, y, w, h, shimmerShift) {
-    const g = ctx.createLinearGradient(x - w * 0.5, y - h * 0.5, x + w * 0.5, y + h * 0.4);
-    const s = (Math.sin(shimmerShift) + 1) * 0.12;
-    g.addColorStop(0, "#4e5664");
-    g.addColorStop(Math.min(0.28 + s, 0.45), "#ffffff");
-    g.addColorStop(0.52, "#7c8696");
-    g.addColorStop(Math.min(0.76 + s, 0.92), "#f2f5fa");
-    g.addColorStop(1, "#3b424f");
-    return g;
-  }
-
-  // Desenha a Lua com transição suave de Cheia (phase=0) para Minguante (phase=1)
-  function drawMoon(cx, cy, r, phase, glowStrength) {
+  function drawMoon(cx, cy, r, phase, glowStrength, time) {
     ctx.save();
 
-    // Halo atmosférico atrás da lua
-    const halo = ctx.createRadialGradient(cx, cy, r * 0.75, cx, cy, r * 1.48);
-    halo.addColorStop(0, `rgba(215, 228, 248, ${0.26 * glowStrength})`);
-    halo.addColorStop(0.55, `rgba(145, 168, 204, ${0.09 * glowStrength})`);
+    // Halo atmosférico super brilhante e prateado
+    const pulseGlow = glowStrength * (1 + Math.sin(time * 3) * 0.15);
+    const halo = ctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r * 1.75);
+    halo.addColorStop(0, `rgba(235, 245, 255, ${0.42 * pulseGlow})`);
+    halo.addColorStop(0.45, `rgba(165, 190, 228, ${0.18 * pulseGlow})`);
+    halo.addColorStop(0.8, `rgba(110, 140, 185, ${0.06 * pulseGlow})`);
     halo.addColorStop(1, "rgba(5, 7, 11, 0)");
     ctx.fillStyle = halo;
     ctx.beginPath();
-    ctx.arc(cx, cy, r * 1.48, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r * 1.75, 0, Math.PI * 2);
     ctx.fill();
 
     // Recorte circular da lua
@@ -205,33 +182,31 @@ if (!reduce) {
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.clip();
 
-    // Desenha a textura lunar realista
+    // Desenha a textura lunar
     ctx.drawImage(moonTex, cx - r * 1.08, cy - r * 1.08, r * 2.16, r * 2.16);
 
-    // Sombra da fase lunar (transição suave de lua cheia para minguante fina à direita)
+    // Sombra da fase lunar (muda de cheia para minguante)
     if (phase > 0.001) {
-      // Quando phase=0: sombra totalmente fora à esquerda;
-      // Quando phase=1: sombra avança deixando um crescente minguante iluminado na direita
-      const shadowOffsetX = -r * 2.05 + phase * (r * 1.66);
+      const shadowOffsetX = -r * 2.05 + phase * (r * 1.68);
       const shadowR = r * 1.06;
 
       const shadowGrad = ctx.createRadialGradient(
-        cx + shadowOffsetX, cy, shadowR * 0.82,
-        cx + shadowOffsetX, cy, shadowR * 1.05
+        cx + shadowOffsetX, cy, shadowR * 0.8,
+        cx + shadowOffsetX, cy, shadowR * 1.06
       );
-      shadowGrad.addColorStop(0, "rgba(5, 7, 11, 0.96)");
-      shadowGrad.addColorStop(0.86, "rgba(5, 7, 11, 0.92)");
+      shadowGrad.addColorStop(0, "rgba(5, 7, 11, 0.98)");
+      shadowGrad.addColorStop(0.85, "rgba(5, 7, 11, 0.94)");
       shadowGrad.addColorStop(1, "rgba(5, 7, 11, 0)");
 
       ctx.fillStyle = shadowGrad;
       ctx.beginPath();
-      ctx.arc(cx + shadowOffsetX, cy, shadowR * 1.05, 0, Math.PI * 2);
+      ctx.arc(cx + shadowOffsetX, cy, shadowR * 1.06, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Borda prateada fina iluminando o contorno da lua
-    ctx.strokeStyle = "rgba(235, 242, 255, 0.25)";
-    ctx.lineWidth = 2;
+    // Contorno luminoso prateado na borda da lua
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.65)";
+    ctx.lineWidth = 2.8;
     ctx.beginPath();
     ctx.arc(cx, cy, r - 1, 0, Math.PI * 2);
     ctx.stroke();
@@ -239,293 +214,19 @@ if (!reduce) {
     ctx.restore();
   }
 
-  // Desenha o Lobo Uivando em silhueta escura com contorno prateado (igual à referência)
-  function drawHowlingWolf(cx, cy, scale, alpha, howlPulse, time) {
-    if (alpha <= 0.01) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.translate(cx, cy);
-    ctx.scale(scale, scale);
-
-    // Ondas sutis do uivo saindo do focinho em direção à lua
-    if (howlPulse > 0.05) {
-      for (let w = 0; w < 3; w++) {
-        const prog = ((time * 0.7 + w * 0.33) % 1);
-        const waveR = 26 + prog * 115;
-        ctx.save();
-        ctx.strokeStyle = `rgba(220, 232, 250, ${(1 - prog) * 0.26 * howlPulse})`;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(46, -148, waveR, -Math.PI * 0.62, -Math.PI * 0.12);
-        ctx.stroke();
-        ctx.restore();
-      }
-    }
-
-    // Silhueta anatômica detalhada do lobo uivando para cima
-    ctx.beginPath();
-    ctx.moveTo(-115, 210); // Base peito esquerdo
-    ctx.bezierCurveTo(-112, 140, -96, 80, -78, 22); // Peito robusto
-    ctx.bezierCurveTo(-72, -10, -74, -44, -64, -76); // Pescoço frontal
-    // Orelha esquerda e direita pontudas
-    ctx.lineTo(-56, -124);
-    ctx.lineTo(-36, -96);
-    ctx.lineTo(-22, -134);
-    ctx.lineTo(-6, -98);
-    // Testa e focinho apontando para o céu uivando
-    ctx.bezierCurveTo(8, -112, 24, -132, 46, -154); // Topo do focinho
-    ctx.bezierCurveTo(54, -158, 60, -152, 56, -144); // Ponta do nariz
-    ctx.lineTo(36, -118); // Boca aberta uivando (parte superior)
-    ctx.lineTo(50, -112); // Mandíbula inferior aberta
-    ctx.bezierCurveTo(48, -104, 34, -96, 18, -86); // Queixo
-    // Pelagem da juba / nuca do lobo
-    ctx.bezierCurveTo(26, -54, 42, -24, 34, 6);
-    ctx.lineTo(48, 22);
-    ctx.bezierCurveTo(44, 52, 62, 84, 54, 114);
-    ctx.lineTo(72, 134);
-    ctx.bezierCurveTo(78, 162, 92, 188, 102, 210);
-    ctx.closePath();
-
-    // Preenchimento negro profundo com reflexo prateado metálico no dorso/focinho
-    const wolfFill = ctx.createLinearGradient(-90, -140, 80, 180);
-    wolfFill.addColorStop(0, "#05070b");
-    wolfFill.addColorStop(0.45, "#0b1018");
-    wolfFill.addColorStop(0.75, "#1b2433");
-    wolfFill.addColorStop(1, "#05070b");
-    ctx.fillStyle = wolfFill;
-    ctx.fill();
-
-    // Rim light (luz de recorte prateada da lua cheia contornando o lobo)
-    const rimGrad = ctx.createLinearGradient(-40, -155, 85, 190);
-    rimGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
-    rimGrad.addColorStop(0.5, "rgba(185, 198, 218, 0.65)");
-    rimGrad.addColorStop(1, "rgba(120, 132, 150, 0.2)");
-    ctx.strokeStyle = rimGrad;
-    ctx.lineWidth = 3.2;
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  // Desenha a barra olímpica com 3 anilhas prateadas de cada lado
-  function drawBarbell(yPos, time, isWoman) {
-    const chromeBar = createChromeGradient(0, yPos, 560, 40, time * 1.4);
-
-    // Eixo da barra olímpica
-    ctx.fillStyle = chromeBar;
-    ctx.strokeStyle = "#111620";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(-275, yPos - 6, 550, 12, 5);
-    ctx.fill();
-    ctx.stroke();
-
-    // Conjunto de anilhas (esquerda e direita)
-    const sides = [-1, 1];
-    const plateSpecs = isWoman
-      ? [
-          { offset: 158, w: 18, h: 118 },
-          { offset: 180, w: 16, h: 102 },
-          { offset: 200, w: 14, h: 84 },
-          { offset: 218, w: 16, h: 26 } // Presilha
-        ]
-      : [
-          { offset: 168, w: 20, h: 132 },
-          { offset: 192, w: 18, h: 116 },
-          { offset: 214, w: 16, h: 98 },
-          { offset: 234, w: 18, h: 28 } // Presilha
-        ];
-
-    sides.forEach((dir) => {
-      plateSpecs.forEach((p) => {
-        const px = dir > 0 ? p.offset : -p.offset - p.w;
-        const py = yPos - p.h / 2;
-        const pGrad = ctx.createLinearGradient(px, py, px + p.w, py + p.h);
-        pGrad.addColorStop(0, "#ffffff");
-        pGrad.addColorStop(0.35, "#9ea8b8");
-        pGrad.addColorStop(0.7, "#eef2f8");
-        pGrad.addColorStop(1, "#434b59");
-
-        ctx.fillStyle = pGrad;
-        ctx.beginPath();
-        ctx.roundRect(px, py, p.w, p.h, 5);
-        ctx.fill();
-        ctx.strokeStyle = "#0b0f17";
-        ctx.lineWidth = 2.2;
-        ctx.stroke();
-      });
-    });
-  }
-
-  // Desenha o Homem Forte Prateado segurando a barra com anilhas nas costas
-  function drawStrongMan(cx, cy, scale, alpha, time) {
-    if (alpha <= 0.01) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.translate(cx, cy);
-    // Respiração atlética sutil
-    const breath = 1 + Math.sin(time * 2.2) * 0.012;
-    ctx.scale(scale * breath, scale * breath);
-
-    const bodyGrad = createChromeGradient(0, 10, 340, 380, time * 1.4);
-
-    // 1. Barra olímpica atrás do trapézio
-    drawBarbell(-46, time, false);
-
-    // 2. Silhueta muscular masculina (cabeça, trapézio, deltoides, bíceps, antebraços, dorsal)
-    ctx.fillStyle = bodyGrad;
-    ctx.strokeStyle = "#0c1018";
-    ctx.lineWidth = 3;
-
-    ctx.beginPath();
-    // Cabeça e pescoço
-    ctx.arc(0, -118, 30, Math.PI * 0.85, Math.PI * 0.15, false);
-    // Trapézio direito e ombro/deltoide direito
-    ctx.bezierCurveTo(32, -84, 58, -76, 86, -64);
-    ctx.bezierCurveTo(116, -54, 134, -26, 138, 6);
-    // Bíceps e antebraço direito subindo para segurar a barra
-    ctx.bezierCurveTo(154, 6, 166, -16, 162, -46);
-    ctx.lineTo(142, -46);
-    ctx.bezierCurveTo(138, -28, 128, -20, 118, -24);
-    // Dorsal direito (shape em V) até a cintura
-    ctx.bezierCurveTo(114, 24, 96, 78, 76, 130);
-    ctx.lineTo(74, 205);
-    ctx.lineTo(-74, 205);
-    ctx.lineTo(-76, 130);
-    // Dorsal esquerdo
-    ctx.bezierCurveTo(-96, 78, -114, 24, -118, -24);
-    // Antebraço e bíceps esquerdo segurando a barra
-    ctx.bezierCurveTo(-128, -20, -138, -28, -142, -46);
-    ctx.lineTo(-162, -46);
-    ctx.bezierCurveTo(-166, -16, -154, 6, -138, 6);
-    // Deltoide e trapézio esquerdo
-    ctx.bezierCurveTo(-134, -26, -116, -54, -86, -64);
-    ctx.bezierCurveTo(-58, -76, -32, -84, -26, -98);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    // Mãos fechadas segurando a barra na frente
-    [-152, 152].forEach((hx) => {
-      ctx.beginPath();
-      ctx.roundRect(hx - 14, -56, 28, 22, 8);
-      ctx.fillStyle = "#f4f7fc";
-      ctx.fill();
-      ctx.stroke();
-    });
-
-    // Linhas internas de definição muscular (peitoral/escápulas e abdômen)
-    ctx.strokeStyle = "rgba(15, 20, 30, 0.42)";
-    ctx.lineWidth = 2.4;
-    ctx.beginPath();
-    ctx.moveTo(0, -58);
-    ctx.lineTo(0, 110);
-    ctx.moveTo(-64, 4);
-    ctx.quadraticCurveTo(-28, 22, 0, 8);
-    ctx.quadraticCurveTo(28, 22, 64, 4);
-    ctx.stroke();
-
-    // Brilho especular de borda prateada
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.72)";
-    ctx.lineWidth = 1.6;
-    ctx.beginPath();
-    ctx.arc(0, -118, 28, -Math.PI * 0.8, -Math.PI * 0.2);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  // Desenha a Mulher Forte Prateada (com rabo de cavalo) segurando a barra com anilhas
-  function drawStrongWoman(cx, cy, scale, alpha, time) {
-    if (alpha <= 0.01) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.translate(cx, cy);
-    const breath = 1 + Math.sin(time * 2.2) * 0.012;
-    ctx.scale(scale * breath, scale * breath);
-
-    const bodyGrad = createChromeGradient(0, 10, 320, 380, time * 1.4 + 1.2);
-
-    // 1. Barra olímpica atrás dos ombros
-    drawBarbell(-46, time, true);
-
-    ctx.fillStyle = bodyGrad;
-    ctx.strokeStyle = "#0c1018";
-    ctx.lineWidth = 3;
-
-    // 2. Rabo de cavalo estilizado prateado esvoaçante
-    ctx.beginPath();
-    ctx.moveTo(-18, -138);
-    ctx.bezierCurveTo(-56, -148, -76, -112, -66, -72);
-    ctx.bezierCurveTo(-54, -84, -44, -104, -26, -112);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    // 3. Silhueta atlética feminina definida (cintura marcada, ombros torneados, quadril atlético)
-    ctx.beginPath();
-    // Cabeça e pescoço esguio
-    ctx.arc(0, -116, 26, Math.PI * 0.85, Math.PI * 0.15, false);
-    // Ombro e deltoide direito definido
-    ctx.bezierCurveTo(24, -84, 48, -74, 74, -62);
-    ctx.bezierCurveTo(100, -52, 118, -26, 122, 4);
-    // Bíceps e antebraço direito segurando a barra
-    ctx.bezierCurveTo(138, 4, 150, -16, 146, -46);
-    ctx.lineTo(128, -46);
-    ctx.bezierCurveTo(124, -28, 114, -22, 104, -24);
-    // Cintura fina definida e curva do quadril atlético direito
-    ctx.bezierCurveTo(92, 18, 62, 54, 56, 86);
-    ctx.bezierCurveTo(52, 114, 78, 142, 82, 205);
-    ctx.lineTo(-82, 205);
-    // Quadril atlético e cintura fina esquerda
-    ctx.bezierCurveTo(-78, 142, -52, 114, -56, 86);
-    ctx.bezierCurveTo(-62, 54, -92, 18, -104, -24);
-    // Antebraço e bíceps esquerdo segurando a barra
-    ctx.bezierCurveTo(-114, -22, -124, -28, -128, -46);
-    ctx.lineTo(-146, -46);
-    ctx.bezierCurveTo(-150, -16, -138, 4, -122, 4);
-    // Deltoide e ombro esquerdo
-    ctx.bezierCurveTo(-118, -26, -100, -52, -74, -62);
-    ctx.bezierCurveTo(-48, -74, -24, -84, -22, -96);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    // Mãos fechadas na barra
-    [-137, 137].forEach((hx) => {
-      ctx.beginPath();
-      ctx.roundRect(hx - 13, -55, 26, 20, 7);
-      ctx.fillStyle = "#f4f7fc";
-      ctx.fill();
-      ctx.stroke();
-    });
-
-    // Linhas internas de definição feminina
-    ctx.strokeStyle = "rgba(15, 20, 30, 0.38)";
-    ctx.lineWidth = 2.2;
-    ctx.beginPath();
-    ctx.moveTo(-48, -2);
-    ctx.quadraticCurveTo(-22, 14, 0, 4);
-    ctx.quadraticCurveTo(22, 14, 48, -2);
-    ctx.moveTo(-46, 138);
-    ctx.quadraticCurveTo(0, 152, 46, 138);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  // Partículas prateadas de energia durante as transições de metamorfose
   function drawMorphParticles(cx, cy, intensity, time) {
     if (intensity <= 0.02) return;
     ctx.save();
     particles.forEach((p) => {
       const a = p.angle + time * p.speed;
-      const r = p.radius * (0.75 + 0.35 * Math.sin(time * 2 + p.offset));
+      const r = p.radius * (0.8 + 0.3 * Math.sin(time * 2.5 + p.offset));
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r * 0.85;
-      ctx.fillStyle = `rgba(240, 245, 255, ${intensity * 0.75})`;
+      ctx.fillStyle = `rgba(255, 255, 255, ${intensity * 0.9})`;
+      ctx.shadowColor = "rgba(220, 240, 255, 0.9)";
+      ctx.shadowBlur = 8;
       ctx.beginPath();
-      ctx.arc(x, y, p.size * (0.6 + intensity * 0.7), 0, Math.PI * 2);
+      ctx.arc(x, y, p.size * (0.7 + intensity * 0.8), 0, Math.PI * 2);
       ctx.fill();
     });
     ctx.restore();
@@ -535,7 +236,7 @@ if (!reduce) {
     return -(Math.cos(Math.PI * t) - 1) / 2;
   }
 
-  const CYCLE = 18.0; // 18 segundos para o ciclo completo (Lobo -> Homem -> Lobo -> Mulher -> Lobo)
+  const CYCLE = 18.0; // 18 segundos no total
 
   function render(nowMs) {
     const time = nowMs * 0.001;
@@ -543,77 +244,68 @@ if (!reduce) {
 
     ctx.clearRect(0, 0, SIZE, SIZE);
 
-    let moonPhase = 0; // 0 = Lua Cheia, 1 = Lua Minguante
-    let wolfAlpha = 0;
-    let manAlpha = 0;
-    let womanAlpha = 0;
+    let moonPhase = 0; // 0 = Cheia, 1 = Minguante
+    let wolfActive = false;
+    let manActive = false;
+    let womanActive = false;
     let morphEnergy = 0;
-    let howlPulse = 0;
 
     if (t < 3.0) {
-      // 0s - 3s: Lua Cheia + Lobo Uivando
+      // 0s - 3s: Lua Cheia + Lobo.png
       moonPhase = 0;
-      wolfAlpha = 1;
-      howlPulse = 1;
+      wolfActive = true;
     } else if (t < 5.5) {
-      // 3s - 5.5s: Transição lenta para Lua Minguante + Lobo se transforma no Homem Forte Prateado
+      // 3s - 5.5s: Transição para Lua Minguante + Homem.jpg
       const p = easeInOutSine((t - 3.0) / 2.5);
       moonPhase = p;
-      wolfAlpha = 1 - p;
-      manAlpha = p;
+      if (p < 0.5) wolfActive = true; else manActive = true;
       morphEnergy = Math.sin(p * Math.PI);
     } else if (t < 8.0) {
-      // 5.5s - 8.0s: Lua Minguante + Homem Forte Prateado em destaque
+      // 5.5s - 8.0s: Lua Minguante + Homem.jpg
       moonPhase = 1;
-      manAlpha = 1;
+      manActive = true;
     } else if (t < 10.2) {
-      // 8.0s - 10.2s: Volta da Lua Cheia + Homem retorna ao Lobo Uivando
+      // 8.0s - 10.2s: Retorno para Lua Cheia + Lobo.png
       const p = easeInOutSine((t - 8.0) / 2.2);
       moonPhase = 1 - p;
-      manAlpha = 1 - p;
-      wolfAlpha = p;
+      if (p < 0.5) manActive = true; else wolfActive = true;
       morphEnergy = Math.sin(p * Math.PI);
-      howlPulse = p;
     } else if (t < 12.2) {
-      // 10.2s - 12.2s: Lua Cheia + Lobo Uivando novamente
+      // 10.2s - 12.2s: Lua Cheia + Lobo.png
       moonPhase = 0;
-      wolfAlpha = 1;
-      howlPulse = 1;
+      wolfActive = true;
     } else if (t < 14.7) {
-      // 12.2s - 14.7s: Transição lenta para Lua Minguante + Lobo se transforma na Mulher Forte Prateada
+      // 12.2s - 14.7s: Transição para Lua Minguante + Mulher.jpg
       const p = easeInOutSine((t - 12.2) / 2.5);
       moonPhase = p;
-      wolfAlpha = 1 - p;
-      womanAlpha = p;
+      if (p < 0.5) wolfActive = true; else womanActive = true;
       morphEnergy = Math.sin(p * Math.PI);
     } else if (t < 16.5) {
-      // 14.7s - 16.5s: Lua Minguante + Mulher Forte Prateada em destaque
+      // 14.7s - 16.5s: Lua Minguante + Mulher.jpg
       moonPhase = 1;
-      womanAlpha = 1;
+      womanActive = true;
     } else {
-      // 16.5s - 18.0s: Volta suave para Lua Cheia + Lobo Uivando fechando o loop perfeito
+      // 16.5s - 18.0s: Retorno para Lua Cheia + Lobo.png
       const p = easeInOutSine((t - 16.5) / 1.5);
       moonPhase = 1 - p;
-      womanAlpha = 1 - p;
-      wolfAlpha = p;
+      if (p < 0.5) womanActive = true; else wolfActive = true;
       morphEnergy = Math.sin(p * Math.PI);
-      howlPulse = p;
     }
+
+    // Atualiza as classes CSS das imagens HTML para fazer o fade in/out sincronizado
+    if (charWolf) charWolf.classList.toggle('active', wolfActive);
+    if (charMan) charMan.classList.toggle('active', manActive);
+    if (charWoman) charWoman.classList.toggle('active', womanActive);
 
     const moonX = 480;
     const moonY = 390;
     const moonR = 265;
 
-    // 1. Desenha a Lua (Cheia -> Minguante -> Cheia)
-    drawMoon(moonX, moonY, moonR, moonPhase, 1 - moonPhase * 0.45);
+    // 1. Desenha a Lua ultra prateada e brilhante
+    drawMoon(moonX, moonY, moonR, moonPhase, 1.25 - moonPhase * 0.4, time);
 
-    // 2. Partículas prateadas da transformação
+    // 2. Partículas prateadas de transição
     drawMorphParticles(moonX, moonY + 75, morphEnergy, time);
-
-    // 3. Figuras em primeiro plano sobre a lua
-    drawHowlingWolf(moonX - 10, moonY + 115, 1.05 + (1 - wolfAlpha) * 0.08, wolfAlpha, howlPulse, time);
-    drawStrongMan(moonX, moonY + 110, 0.94 + manAlpha * 0.06, manAlpha, time);
-    drawStrongWoman(moonX, moonY + 110, 0.94 + womanAlpha * 0.06, womanAlpha, time);
 
     if (!reduce) requestAnimationFrame(render);
   }

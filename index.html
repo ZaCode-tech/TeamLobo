@@ -25,9 +25,14 @@
 
 <main id="topo">
   <section class="hero">
-    <!-- Cena Cinematográfica: Lua com Crateras + Metamorfose Lobo -> Homem Prateado -> Lobo -> Mulher Prateada -->
+    <!-- Cena Cinematográfica: Lua Super Prateada + Imagens Sincronizadas (Lobo PNG, Homem JPG, Mulher JPG) -->
     <div class="moon-stage" aria-hidden="true">
-      <canvas id="wolfMoonCanvas"></canvas>
+      <canvas id="silverMoonCanvas"></canvas>
+      <div class="hero-characters">
+        <img id="charWolf" src="assets/lobo.png" alt="Lobo" class="char-img active" onerror="this.style.display='none'">
+        <img id="charMan" src="assets/homem.jpg" alt="Homem Forte" class="char-img" onerror="this.style.display='none'">
+        <img id="charWoman" src="assets/mulher.jpg" alt="Mulher Forte" class="char-img" onerror="this.style.display='none'">
+      </div>
     </div>
 
     <div class="hero-in">
